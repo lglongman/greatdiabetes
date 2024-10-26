@@ -1,0 +1,146 @@
+/* BACKGROUND */
+#background-container {
+    position: absolute;
+    padding: 0;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: top 1s ease;
+}
+#water {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#water.redwave {
+    background: linear-gradient(0deg, rgb(175, 0, 0), rgb(255, 0, 0));
+}
+#water.bluewave {
+    background: linear-gradient(0deg, rgb(0, 0, 175), rgb(0, 0, 255));
+}
+
+.wave {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 3rem;
+}
+.wave.redwave {
+    background: url("../assets/img/wave0.svg");
+    background-size: 70rem 100%;
+    background-repeat: repeat;
+}
+.wave.bluewave {
+    background: url("../assets/img/wave1.svg");
+    background-size: 70rem 100%;
+    background-repeat: repeat;
+}
+
+#wave1 {
+    /* translate: 0% -99%; */
+    background-position: 0% 0%;
+    opacity: 1.0;
+    z-index: 3;
+    animation: wave1 linear 0.75s infinite;
+}
+#wave2 {
+    /* translate: 0% -109%; */
+    background-position: 20rem 0%;
+    opacity: 0.5;
+    z-index: 2;
+    animation: wave2 linear 1s infinite;
+}
+#wave3 {
+    /* translate: 0% -119%; */
+    background-position: 50rem 0%;
+    opacity: 0.3;
+    z-index: 1;
+    animation: wave3 linear 1.25s infinite;
+}
+
+@keyframes wave1 {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 70rem;
+    }
+}
+@keyframes wave2 {
+    0% {
+        background-position-x: 20rem;
+    }
+    100% {
+        background-position-x: 90rem;
+    }
+}
+@keyframes wave3 {
+    0% {
+        background-position-x: 50rem;
+    }
+    100% {
+        background-position-x: -20rem;
+    }
+}
+
+/*BUBBLES*/
+#bubble-container {
+    position: relative;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+#bubble-container span{
+    position: absolute;
+    bottom: 3rem;
+    z-index: 4;
+    background: transparent;
+    border-radius: 50%;
+    pointer-events: none;
+
+    animation: bubbles linear 1.25s infinite;
+}
+#bubble-container .redbubble {
+    box-shadow: inset 0 0 0.5rem rgba(255, 150, 150, 1);
+}
+#bubble-container .bluebubble {
+    box-shadow: inset 0 0 0.5rem rgba(150, 150, 255, 1);
+}
+
+#bubble-container .redbubble:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.3) translate(-70%, -70%);
+    border-radius: 50%;
+    background: radial-gradient(rgba(255, 150, 150, 1), transparent);
+}
+#bubble-container .bluebubble:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(0.3) translate(-70%, -70%);
+    border-radius: 50%;
+    background: radial-gradient(rgba(150, 150, 255, 1), transparent);
+}
+
+@keyframes bubbles {
+    0% {
+        bottom: 0%;
+        opacity: 1;
+    }
+    100% {
+        bottom: 99%;
+        opacity: 0.75;
+    }
+}

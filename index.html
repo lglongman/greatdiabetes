@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="icon" href="favicon.ico" type="x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Robocon New Member Contest</title>
+                
+        <link rel="stylesheet" href="stylesheet/style.css">
+        <link rel="stylesheet" href="stylesheet/effects.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />        
+    </head>   
+    
+    <script src="script/script.js"></script>
+    <script src="script/effects.js"></script>
+    
+    <body onload="init()">
+        <div id="background-container">
+            <div class="wave redwave" id="wave1"></div>
+            <div class="wave redwave" id="wave2"></div>
+            <div class="wave redwave" id="wave3"></div>
+            <div class="redwave" id="water"></div>
+            <div id="bubble-container"></div>
+        </div>
+
+        <div class="flex-container wrapper">
+            <div class="wrapper" id="top"><div class="container">
+                <div class="top-left">
+                    <audio id="audio0" preload="auto"><source src="assets/audio/short_beep.mp3"></audio>
+                    <audio id="audio1" preload="audo"><source src="assets/audio/long_beep.mp3"></audio>
+                    <span class="text" id="timerTitle">SET-UP TIME</span>
+                    <span class="num" id="timerTime">60</span>
+                </div>
+                <div class="top-right">
+                    <button class="text timerBtn" id="switchBtn" onclick="switchTimerMode()">Game</button>
+                    <button class="text timerBtn" id="startBtn" onclick="handleTimer()">Start</button>
+                    <button class="text timerBtn" id="resetBtn" onclick="resetTimer()">Reset</button>
+                </div>
+            </div></div>
+
+            <div id="bottom">
+                <div class="team wrapper" id="redTeam">
+                    <span class="title text" style="background-color: red;">red team</span>
+                    <div class="stage" id="redStage1"><div class="container">
+                        <button class="button" id="button010" onclick="updateScore(1, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="redStage1Lbl">0</span>
+                        <button class="button" id="button011" onclick="updateScore(1, 0, true)"><i class="fa-solid fa-plus"></i></button>
+                    </div></div>
+                    <div class="stage" id="redStage2"><div class="container">
+                        <button class="button" id="button020" onclick="updateScore(2, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="redStage2Lbl" style="opacity: 0.3;">0</span>
+                        <button class="button" id="button021" onclick="updateScore(2, 0, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                    </div></div>
+                    <div class="stage" id="redStage3"><div class="container">
+                        <button class="button" id="button030" onclick="updateScore(3, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="redStage3Lbl" style="opacity: 0.3;">0</span>
+                        <button class="button" id="button031" onclick="updateScore(3, 0, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                        <button class="button" id="button032" onclick="handleCandy(0)" disabled="true"><i class="fa-solid fa-basketball"></i></button>
+                    </div></div>
+                </div>
+                
+                <div class="team wrapper" id="stageWrapper">
+                    <div class="title text" style="background-color: grey;">Stage</div>
+                    <div class="text stage"><div class="container">I</div></div>
+                    <div class="text stage"><div class="container">II</div></div>
+                    <div class="text stage"><div class="container">III</div></div>
+                </div>
+
+                <div class="team wrapper" id="blueTeam">
+                    <span class="title text" style="background-color: blue;">blue team</span>
+                    <div class="stage" id="blueStage1"><div class="container">
+                        <button class="button" id="button110" onclick="updateScore(1, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="blueStage1Lbl">0</span>
+                        <button class="button" id="button111" onclick="updateScore(1, 1, true)"><i class="fa-solid fa-plus"></i></button>
+                    </div></div>
+                    <div class="stage" id="blueStage2"><div class="container">
+                        <button class="button" id="button120" onclick="updateScore(2, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="blueStage2Lbl" style="opacity: 0.3;">0</span>
+                        <button class="button" id="button121" onclick="updateScore(2, 1, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                    </div></div>
+                    <div class="stage" id="blueStage3"><div class="container">
+                        <button class="button" id="button130" onclick="updateScore(3, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
+                        <span class="num" id="blueStage3Lbl" style="opacity: 0.3;">0</span>
+                        <button class="button" id="button131" onclick="updateScore(3, 1, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                        <button class="button" id="button132" onhover onclick="handleCandy(1)" disabled="true"><i class="fa-solid fa-basketball"></i></button>
+                    </div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper overlay hidden" id="overlay">
+            <audio id="audio2" preload="auto"><source src="assets/audio/endgame_greatdiabetes.mp3"></audio>
+            <!-- <audio id="audio3" preload="auto"><source src="assets/endgame.mp3"></audio> -->
+            <button id="closeBtn" onclick="showOverlay(false, 0, false)"><i class="fa-solid fa-plus" style="transform: rotate(45deg)"></i></button>
+            <img class="image" id="cola0" src="assets/img/team0_cola.png">
+            <img class="image" id="cola1" src="assets/img/team1_cola.png">
+            <span class="text" id="overlayTitle">GREAT DIABETES</span>
+            <span class="text" id="overlayLbl">Red Team Wins</span>
+            <span class="text" id="overlayTime">180.000s</span>
+        </div>
+
+        <div id="footer">
+            <a class="text" href="https://github.com/lglongman/greatdiabetes" target="_blank" rel="noopener noreferrer">How To Use</a>
+            <span class="text">|</span>
+            <a class="text" href="https://drive.google.com/file/d/1ECbNIh87YVRTLQ-nvddSUtxUYO3VdwwZ/view?pli=1" target="_blank" rel="noopener noreferrer">Rulebook</a>
+        </div>
+    </body>
+</html>
