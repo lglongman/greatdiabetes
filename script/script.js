@@ -94,7 +94,7 @@ function loadAudio (num) {
 /*------TIMER------*/
 function switchTimerMode() {
     gameMode = gameMode == SETUP? GAME : SETUP;
-    totalTime = gameMode == SETUP? 12 : 15;
+    totalTime = gameMode == SETUP? 60 : 180;
     switchBtn.textContent = gameMode == SETUP? "Game" : "Set-up";
     resetTimer();
 }
