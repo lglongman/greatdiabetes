@@ -9,6 +9,7 @@ let switchBtn = null;
 let startBtn = null;
 let resetBtn = null;
 let stageLabel = [];
+let stageTime = [];
 let audio = [];
 let overlay = null;
 let colaImg = [];
@@ -41,8 +42,16 @@ function init() {
         num = i + 1
         stageLabel[RED_TEAM][i] = document.getElementById("redStage" + num + "Lbl");
         stageLabel[BLUE_TEAM][i] = document.getElementById("blueStage" + num + "Lbl");
-    }   
+    }
 
+    stageTime[RED_TEAM] = [];
+    stageTime[BLUE_TEAM] = [];
+    for (var i = 0; i < 3; i++) {
+        num = i + 1;
+        stageTime[RED_TEAM][i] = document.getElementById("redStage" + num + "Time");
+        stageTime[BLUE_TEAM][i] = document.getElementById("blueStage" + num + "Time");
+    }
+    
     for (var i = 0; i < 3; i++) {
         audio[i] = document.getElementById("audio" + i);
         audio[i].load();
@@ -221,12 +230,14 @@ function unlockStage(team, stage) {
     for (i = 0; i < 3; i++) {
         if (i < stage) {
             stageLabel[team][i].style.opacity = 1.0;
+            if (i < 2) stageTime[team][i].style.opacity = 1.0;
             getButton(team, i + 1, ADD).disabled = sodaCanNumInStage[team][i] >= maxSodaCanNumInStage[i];
             getButton(team, i + 1, MINUS).disabled = sodaCanNumInStage[team][i] <= 0;
             if (i + 1 == 3) getButton(team, i + 1, CANDY).disabled = false;
         }
         else {
             stageLabel[team][i].style.opacity = 0.3;
+            if (i < 2) stageTime[team][i].style.opacity = 0.3;
             getButton(team, i + 1, ADD).disabled = true;
             getButton(team, i + 1, MINUS).disabled = true;
             if (i + 1 == 3) getButton(team, i + 1, CANDY).disabled = true;
