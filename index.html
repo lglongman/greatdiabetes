@@ -45,15 +45,17 @@
                         <button class="button" id="button010" onclick="updateScore(1, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
                         <span class="num" id="redStage1Lbl">0</span>
                         <button class="button" id="button011" onclick="updateScore(1, 0, true)"><i class="fa-solid fa-plus"></i></button>
+                        <span class="num stageTime" id="redStage1Time">0.0s</span>
                     </div></div>
                     <div class="stage" id="redStage2"><div class="container">
                         <button class="button" id="button020" onclick="updateScore(2, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
                         <span class="num" id="redStage2Lbl" style="opacity: 0.3;">0</span>
                         <button class="button" id="button021" onclick="updateScore(2, 0, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                        <span class="num stageTime" id="redStage2Time" style="opacity: 0.3;">0.0s</span>
                     </div></div>
                     <div class="stage" id="redStage3"><div class="container">
                         <button class="button" id="button030" onclick="updateScore(3, 0, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
-                        <span class="num" id="redStage3Lbl" style="opacity: 0.3;">0</span>
+                        <span class="num" id="redStage3Lbl" style="width: 2.5rem; opacity: 0.3;">0</span>
                         <button class="button" id="button031" onclick="updateScore(3, 0, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
                         <button class="button" id="button032" onclick="handleCandy(0)" disabled="true"><i class="fa-solid fa-basketball"></i></button>
                     </div></div>
@@ -61,9 +63,9 @@
                 
                 <div class="team wrapper" id="stageWrapper">
                     <div class="title text" style="background-color: grey;">Stage</div>
-                    <div class="text stage"><div class="container">I</div></div>
-                    <div class="text stage"><div class="container">II</div></div>
-                    <div class="text stage"><div class="container">III</div></div>
+                        <div class="text stage">I</div>
+                        <div class="text stage">II</div>
+                        <div class="text stage">III</div>
                 </div>
 
                 <div class="team wrapper" id="blueTeam">
@@ -72,15 +74,17 @@
                         <button class="button" id="button110" onclick="updateScore(1, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
                         <span class="num" id="blueStage1Lbl">0</span>
                         <button class="button" id="button111" onclick="updateScore(1, 1, true)"><i class="fa-solid fa-plus"></i></button>
+                        <span class="num stageTime" id="blueStage1Time">0.0s</span>
                     </div></div>
                     <div class="stage" id="blueStage2"><div class="container">
                         <button class="button" id="button120" onclick="updateScore(2, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
                         <span class="num" id="blueStage2Lbl" style="opacity: 0.3;">0</span>
                         <button class="button" id="button121" onclick="updateScore(2, 1, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
+                        <span class="num stageTime" id="blueStage2Time" style="opacity: 0.3;">0.0s</span>
                     </div></div>
                     <div class="stage" id="blueStage3"><div class="container">
                         <button class="button" id="button130" onclick="updateScore(3, 1, false)" disabled="true"><i class="fa-solid fa-minus"></i></button>
-                        <span class="num" id="blueStage3Lbl" style="opacity: 0.3;">0</span>
+                        <span class="num" id="blueStage3Lbl" style="width: 2.5rem; opacity: 0.3;">0</span>
                         <button class="button" id="button131" onclick="updateScore(3, 1, true)" disabled="true"><i class="fa-solid fa-plus"></i></button>
                         <button class="button" id="button132" onhover onclick="handleCandy(1)" disabled="true"><i class="fa-solid fa-basketball"></i></button>
                     </div></div>

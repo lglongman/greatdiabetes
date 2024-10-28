@@ -9,6 +9,7 @@ let switchBtn = null;
 let startBtn = null;
 let resetBtn = null;
 let stageLabel = [];
+let stageTimeLabel = [];
 let audio = [];
 let overlay = null;
 let colaImg = [];
@@ -24,6 +25,7 @@ var elapsedTime = 0;
 var lastTimerTime = 0;
 var isRunning = false;
 var currentStage = [1, 1];
+var stageCurrentTime = [[0, 0], [0, 0]];
 const maxSodaCanNumInStage = [6, 4, 10];
 var sodaCanNumInStage = [];
 var scoreCandyBall = [false, false];
@@ -41,8 +43,16 @@ function init() {
         num = i + 1
         stageLabel[RED_TEAM][i] = document.getElementById("redStage" + num + "Lbl");
         stageLabel[BLUE_TEAM][i] = document.getElementById("blueStage" + num + "Lbl");
-    }   
+    }
 
+    stageTimeLabel[RED_TEAM] = [];
+    stageTimeLabel[BLUE_TEAM] = [];
+    for (var i = 0; i < 3; i++) {
+        num = i + 1;
+        stageTimeLabel[RED_TEAM][i] = document.getElementById("redStage" + num + "Time");
+        stageTimeLabel[BLUE_TEAM][i] = document.getElementById("blueStage" + num + "Time");
+    }
+    
     for (var i = 0; i < 3; i++) {
         audio[i] = document.getElementById("audio" + i);
         audio[i].load();
@@ -128,6 +138,16 @@ function resetTimer() {
     timerTime.style.color = "black";
     timerTime.classList.toggle("blink", false);
     
+    //stage time label
+    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
+        for (var stage = 1; stage <= 2; stage++) {
+            stageCurrentTime[team][stage - 1] = 0;
+            updateStageTimeLabel(team, stage);
+            stageTimeLabel[team][stage - 1].style.color = "rgb(100, 100, 100)";
+
+        }
+    }
+    
     startBtn.textContent = "Start";
     timerTitle.textContent = gameMode == SETUP? "SET-UP TIME" : "GAME TIMER";
     timerTime.textContent = totalTime;
@@ -144,15 +164,16 @@ function updateTimer() {
     elapsedTime = currentTime - startTime;
     console.log("elapsedTime: ", elapsedTime / 1000);
 
+    //timer display
     timerTimeDisplay = totalTime - Math.floor(elapsedTime / 1000);
     if (timerTimeDisplay < 0) timerTimeDisplay = 0;
     timerTime.textContent = timerTimeDisplay;
-
     
     if (timerTimeDisplay == 12 && timerTimeDisplay != lastTimerTime) {
         loadAudio(SHORT_BEEP);
     }
-
+    
+    // last 10s timer
     if (timerTimeDisplay <= 10 && timerTimeDisplay > 0) {
         timerTime.style.color = "red";
         if (timerTimeDisplay != lastTimerTime) {
@@ -163,6 +184,26 @@ function updateTimer() {
         timerTime.style.color = "black";
     }
 
+    //stage time label
+    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
+        for (var stage = 1; stage <= 2; stage++) {
+            if (gameMode == SETUP) {
+                stageCurrentTime[team][stage - 1] = 0;
+                updateStageTimeLabel(team, stage);
+                stageTimeLabel[team][stage - 1].style.color = "rgb(100, 100, 100)";
+            }
+            else if (currentStage[team] <= stage) {
+                stageCurrentTime[team][stage - 1] = elapsedTime / 1000;
+                updateStageTimeLabel(team, stage);
+                stageTimeLabel[team][stage - 1].style.color = "rgb(100, 100, 100)";
+            }
+            else {
+                stageTimeLabel[team][stage - 1].style.color = "orange";
+            }
+        }
+    }
+
+    // end timer
     if ((elapsedTime / 1000) >= totalTime) {
         stopTimer();
         switchBtn.disabled = false;
@@ -178,6 +219,23 @@ function updateTimer() {
     }
 
     lastTimerTime = timerTimeDisplay;
+}
+
+/*------STAGE TIME------*/
+function updateStageTimeLabel(team, stage) {
+    if (team != RED_TEAM && team != BLUE_TEAM) {
+        console.log("invalid team");
+    }
+    else if (stage < 1 || stage > 2) {
+        console.log("invalid stage");
+    }
+    else if (time < 0) {
+        console.log("invalid time");
+    }
+    else {
+        var time = (Math.round(stageCurrentTime[team][stage - 1] * 10) / 10).toFixed(1);
+        stageTimeLabel[team][stage - 1].textContent = time + "s";
+    }
 }
 
 
@@ -221,12 +279,14 @@ function unlockStage(team, stage) {
     for (i = 0; i < 3; i++) {
         if (i < stage) {
             stageLabel[team][i].style.opacity = 1.0;
+            if (i < 2) stageTimeLabel[team][i].style.opacity = 1.0;
             getButton(team, i + 1, ADD).disabled = sodaCanNumInStage[team][i] >= maxSodaCanNumInStage[i];
             getButton(team, i + 1, MINUS).disabled = sodaCanNumInStage[team][i] <= 0;
             if (i + 1 == 3) getButton(team, i + 1, CANDY).disabled = false;
         }
         else {
             stageLabel[team][i].style.opacity = 0.3;
+            if (i < 2) stageTimeLabel[team][i].style.opacity = 0.3;
             getButton(team, i + 1, ADD).disabled = true;
             getButton(team, i + 1, MINUS).disabled = true;
             if (i + 1 == 3) getButton(team, i + 1, CANDY).disabled = true;
