@@ -449,7 +449,7 @@ function showOverlay(show, overlayTeam, endgame) {
         else {
             overlayLbl.textContent = "Tie! Super!";
         }
-        overlayTime.textContent = (elapsedTime / 1000) + "s";
+        overlayTime.textContent = (elapsedTime / 1000).toFixed(1) + "s";
         
         switchBtn.disabled = true;
         startBtn.disabled = true;
