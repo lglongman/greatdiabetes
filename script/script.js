@@ -18,8 +18,10 @@ let overlayLbl = null;
 let overlayTime = null;
 
 var gameMode = SETUP;
+var haveGreatVictory = false;
 let timer = null;
-var totalTime = 60;
+var totalTime = [60, 180];
+// var totalTime = [12, 15];
 var startTime = 0;
 var elapsedTime = 0;
 var lastTimerTime = 0;
@@ -94,14 +96,14 @@ function loadAudio (num) {
 /*------TIMER------*/
 function switchTimerMode() {
     gameMode = gameMode == SETUP? GAME : SETUP;
-    totalTime = gameMode == SETUP? 60 : 180;
+    // totalTime = gameMode == SETUP? 60 : 180;
     switchBtn.textContent = gameMode == SETUP? "Game" : "Set-up";
     resetTimer();
 }
 
 function handleTimer() {
     if (!isRunning) {
-        if (elapsedTime >= totalTime * 1000) {
+        if (elapsedTime >= totalTime[gameMode] * 1000) {
             startTime = 0;
             elapsedTime = 0;
         }
@@ -129,43 +131,13 @@ function stopTimer() {
     elapsedTime = Date.now() - startTime;
 }
 
-function resetTimer() {
-    clearInterval(timer);
-    isRunning = false;
-    startTime = 0;
-    elapsedTime = 0;
-    switchBtn.disabled = false;
-    timerTime.style.color = "black";
-    timerTime.classList.toggle("blink", false);
-    
-    //stage time label
-    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
-        for (var stage = 1; stage <= 2; stage++) {
-            stageCurrentTime[team][stage - 1] = 0;
-            updateStageTimeLabel(team, stage);
-            stageTimeLabel[team][stage - 1].style.color = "rgb(100, 100, 100)";
-
-        }
-    }
-    
-    startBtn.textContent = "Start";
-    timerTitle.textContent = gameMode == SETUP? "SET-UP TIME" : "GAME TIMER";
-    timerTime.textContent = totalTime;
-
-    sodaCanNumInStage[RED_TEAM] = [0, 0, 0];
-    sodaCanNumInStage[BLUE_TEAM] = [0, 0, 0];
-    scoreCandyBall = [false, false];
-    checkProgress();
-    displayScore();
-}
-
 function updateTimer() {
     currentTime = Date.now();
     elapsedTime = currentTime - startTime;
     console.log("elapsedTime: ", elapsedTime / 1000);
-
+    
     //timer display
-    timerTimeDisplay = totalTime - Math.floor(elapsedTime / 1000);
+    timerTimeDisplay = totalTime[gameMode] - Math.floor(elapsedTime / 1000);
     if (timerTimeDisplay < 0) timerTimeDisplay = 0;
     timerTime.textContent = timerTimeDisplay;
     
@@ -183,7 +155,7 @@ function updateTimer() {
     else {
         timerTime.style.color = "black";
     }
-
+    
     //stage time label
     for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
         for (var stage = 1; stage <= 2; stage++) {
@@ -202,23 +174,68 @@ function updateTimer() {
             }
         }
     }
-
+    
     // end timer
-    if ((elapsedTime / 1000) >= totalTime) {
+    if ((elapsedTime / 1000) >= totalTime[gameMode]) {
         stopTimer();
         switchBtn.disabled = false;
         startBtn.textContent = "Restart";
         timerTime.classList.toggle("blink", true);
         
         audio[LONG_BEEP].play();
-
+        
         if (gameMode == GAME) {
             displayScore();
             checkProgress();
         }
     }
-
+    
     lastTimerTime = timerTimeDisplay;
+}
+
+function resetButton() {
+    console.clear();
+    resetTimer();
+    
+    //stage time label
+    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
+        for (var stage = 1; stage <= 2; stage++) {
+            stageCurrentTime[team][stage - 1] = 0;
+            updateStageTimeLabel(team, stage);
+            stageTimeLabel[team][stage - 1].style.color = "rgb(100, 100, 100)";
+
+        }
+    }
+    
+    resetGameData();
+    displayScore();
+}
+
+/*------RESET FUNCTION------*/
+function resetTimer() {
+    clearInterval(timer);
+    isRunning = false;
+    startTime = 0;
+    elapsedTime = 0;
+    switchBtn.disabled = false;
+    timerTime.style.color = "black";
+    timerTime.classList.toggle("blink", false);
+    
+    startBtn.textContent = "Start";
+    timerTitle.textContent = gameMode == SETUP? "SET-UP TIME" : "GAME TIMER";
+    timerTime.textContent = totalTime[gameMode];
+}
+
+function resetGameData() {
+    haveGreatVictory = false;
+
+    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
+        sodaCanNumInStage[team] = [0, 0, 0];
+        currentStage[team] = 1;
+        scoreCandyBall[team] = false;
+    
+        unlockStage(team, currentStage[team]);
+    }
 }
 
 /*------STAGE TIME------*/
@@ -294,46 +311,90 @@ function unlockStage(team, stage) {
     }
 }
 
+function checkStageProgess(team) {
+    //check stage
+    if (sodaCanNumInStage[team][1] >= 4 && sodaCanNumInStage[team][0] == 6) {
+        currentStage[team] = 3;
+    }
+    else if (sodaCanNumInStage[team][0] >= 6) {
+        currentStage[team] = 2;
+    }
+    else {
+        currentStage[team] = 1;
+    }
+}
+
 function checkProgress() {
-    winningTeam = TIE;
+    // check stage
     for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
-        //check stage
-        if (sodaCanNumInStage[team][1] >= 4 && sodaCanNumInStage[team][0] == 6) {
-            currentStage[team] = 3;
-        }
-        else if (sodaCanNumInStage[team][0] >= 6) {
-            currentStage[team] = 2;
-        }
-        else {
-            currentStage[team] = 1;
-        }
+        checkStageProgess(team);
         unlockStage(team, currentStage[team]);
-        
-        //check endgame
+    }
+
+    // check winner
+    var winningTeam = checkWinner();
+    if (elapsedTime >= totalTime[gameMode] * 1000 || winningTeam != TIE) {
+        showOverlay(true, winningTeam, haveGreatVictory);
+    }
+}
+
+function checkWinner() {
+    console.log("CHECK WINNER");
+    console.log("check endgame");
+    //check endgame
+    for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
         if ((scoreCandyBall[team] || sodaCanNumInStage[team][2] == 10) && sodaCanNumInStage[team][1] == 4 && sodaCanNumInStage[team][0] == 6) {
-            winningTeam = team;
-            showOverlay(true, team, true);
-            break;
+            if (team == RED_TEAM) {
+                console.log("RED TEAM wins by Great Diabetes");
+            }
+            else {
+                console.log("BLUE TEAM wins by Great Diabetes");
+            }
+
+            haveGreatVictory = true;
+            return team;
         }
     }
+
+    haveGreatVictory = false;
 
     //check winner
-    if (gameMode == GAME && elapsedTime > totalTime * 1000 && winningTeam == TIE) {
-        for (var i = 2; i >= 0; i--) {
-            if (sodaCanNumInStage[RED_TEAM][i] != sodaCanNumInStage[BLUE_TEAM][i]) {
-                if (sodaCanNumInStage[RED_TEAM][i] > sodaCanNumInStage[BLUE_TEAM][i]) {
-                    winningTeam = RED_TEAM;
-                    break;
-                }
-                else {
-                    winningTeam = BLUE_TEAM;
-                    break;
-                }
+    if (gameMode == GAME && elapsedTime >= totalTime[gameMode] * 1000) {
+        console.log("check soda can num")
+        // check soda can number
+        for (var stage = 3; stage >= 1; stage--) {
+            if (sodaCanNumInStage[RED_TEAM][stage - 1] == sodaCanNumInStage[BLUE_TEAM][stage - 1]) {
+                continue;
+            }
+            else if (sodaCanNumInStage[RED_TEAM][stage - 1] > sodaCanNumInStage[BLUE_TEAM][stage - 1]) {
+                console.log("RED TEAM wins by more soda cans in stage " + stage);
+                return RED_TEAM;
+            }
+            else {
+                console.log("BLUE TEAM wins by more soda cans in stage " + stage);
+                return BLUE_TEAM;
             }
         }
-        showOverlay(true, winningTeam, false);
+
+        // check finish stage time
+        for (var stage = 2; stage >= 1; stage--) {
+            if (stageCurrentTime[RED_TEAM][stage - 1] == stageCurrentTime[BLUE_TEAM][stage -1]) {
+                continue;
+            }
+            else if (stageCurrentTime[RED_TEAM][stage - 1] < stageCurrentTime[BLUE_TEAM][stage - 1]) {
+                console.log("RED TEAM wins by completing stage " + stage + " with shorter time");
+                return RED_TEAM;
+            }
+            else {
+                console.log("BLUE TEAM wins by completing stage " + stage + " with shorter time");
+                return BLUE_TEAM;
+            }
+        }
+
+        console.log("TIE: winner decided by POJ");
     }
 
+    return TIE;
 }
 
 function displayScore() {
