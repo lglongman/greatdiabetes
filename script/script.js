@@ -99,6 +99,8 @@ function switchTimerMode() {
     // totalTime = gameMode == SETUP? 60 : 180;
     switchBtn.textContent = gameMode == SETUP? "Game" : "Set-up";
     resetTimer();
+    resetGameData();
+    displayScore();
 }
 
 function handleTimer() {
@@ -339,8 +341,8 @@ function checkProgress() {
 }
 
 function checkWinner() {
-    console.log("CHECK WINNER");
-    console.log("check endgame");
+    // console.log("CHECK WINNER");
+    // console.log("check endgame");
     //check endgame
     for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
         if ((scoreCandyBall[team] || sodaCanNumInStage[team][2] == 10) && sodaCanNumInStage[team][1] == 4 && sodaCanNumInStage[team][0] == 6) {
@@ -360,7 +362,7 @@ function checkWinner() {
 
     //check winner
     if (gameMode == GAME && elapsedTime >= totalTime[gameMode] * 1000) {
-        console.log("check soda can num")
+        // console.log("check soda can num")
         // check soda can number
         for (var stage = 3; stage >= 1; stage--) {
             if (sodaCanNumInStage[RED_TEAM][stage - 1] == sodaCanNumInStage[BLUE_TEAM][stage - 1]) {
@@ -377,6 +379,7 @@ function checkWinner() {
         }
 
         // check finish stage time
+        // console.log("check finish stage time");
         for (var stage = 2; stage >= 1; stage--) {
             if (stageCurrentTime[RED_TEAM][stage - 1] == stageCurrentTime[BLUE_TEAM][stage -1]) {
                 continue;
@@ -484,14 +487,58 @@ function showOverlay(show, overlayTeam, endgame) {
 
 /*EVENT LISTENER*/
 window.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
+    if (event.code === 'Space' && !startBtn.disabled) {
         event.preventDefault();
-        if (!startBtn.disabled) {
-            handleTimer();
-        }
+        handleTimer();
+    }
+    else if (event.code === 'Delete' && !resetBtn.disabled) {
+        event.preventDefault();
+        resetButton();
+    }
+    else if (event.code === 'Tab' && !switchBtn.disabled) {
+        event.preventDefault();
+        switchTimerMode();
     }
     else if (event.code === 'Escape') {
         event.preventDefault();
         showOverlay(false, 0, false);
+    }
+
+    var type = event.shiftKey ? MINUS : ADD;
+    
+    // RED TEAM
+    if (event.code === 'KeyQ' && !getButton(RED_TEAM, 1, type).disabled) {
+        event.preventDefault();
+        updateScore(1, RED_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'KeyA' && !getButton(RED_TEAM, 2, type).disabled) {
+        event.preventDefault();
+        updateScore(2, RED_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'KeyZ' && !getButton(RED_TEAM, 3, type).disabled) {
+        event.preventDefault();
+        updateScore(3, RED_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'KeyX' && !getButton(RED_TEAM, 3, CANDY).disabled) {
+        event.preventDefault();
+        handleCandy(RED_TEAM);
+    }
+
+    // BLUE TEAM
+    if (event.code === 'KeyP' && !getButton(BLUE_TEAM, 1, type).disabled) {
+        event.preventDefault();
+        updateScore(1, BLUE_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'KeyL' && !getButton(BLUE_TEAM, 2, type).disabled) {
+        event.preventDefault();
+        updateScore(2, BLUE_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'Comma' && !getButton(BLUE_TEAM, 3, type).disabled) {
+        event.preventDefault();
+        updateScore(3, BLUE_TEAM, !event.shiftKey);
+    }
+    else if (event.code === 'KeyM' && !getButton(BLUE_TEAM, 3, CANDY).disabled) {
+        event.preventDefault();
+        handleCandy(BLUE_TEAM);
     }
 });
