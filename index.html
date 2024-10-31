@@ -95,7 +95,7 @@
 
         <div class="wrapper overlay hidden" id="overlay">
             <audio id="audio2" preload="auto"><source src="assets/audio/endgame_greatdiabetes.mp3"></audio>
-            <!-- <audio id="audio3" preload="auto"><source src="assets/endgame.mp3"></audio> -->
+            <audio id="audio3" preload="auto"><source src="assets/audio/lose.mp3"></audio>
             <button id="closeBtn" onclick="showOverlay(false, 0, false)"><i class="fa-solid fa-plus" style="transform: rotate(45deg)"></i></button>
             <img class="image" id="cola0" src="assets/img/team0_cola.png">
             <img class="image" id="cola1" src="assets/img/team1_cola.png">
@@ -110,13 +110,19 @@
             <a class="text" href="https://docs.google.com/document/d/17cUGacw1SD96NldEvHeTc-Pq81tK6sQJ/edit?usp=sharing&ouid=117658634229997112009&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">Rulebook</a>
             <span class="text">|</span>
             <label>
-                <input type="checkbox" id="keyboardEnable" checked onclick="toggleKeyboard(this)">
+                <input type="checkbox" id="keyboardEnable" checked>
                 <span class="text">Keyboard</span>
             </label>
             <span class="text">|</span>
             <label>
-                <input type="checkbox" id="controllerEnable" checked oncick="toggleController()">
+                <input type="checkbox" id="controllerEnable" checked>
                 <span class="text" id="controllerLbl">Controller (Disconnected)</span>
+            </label>
+            
+            <span class="text">|</span>
+            <label>
+                <input type="checkbox" id="loseEnable">
+                <span class="text">Billy</span>
             </label>
         </div>
     </body>
