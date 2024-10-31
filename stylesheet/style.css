@@ -310,17 +310,19 @@ button:disabled {
 
 /* FOOTER */
 #footer {
+    /* background-color: purple; */
     position: absolute;
     bottom: 0.5rem;
     left: 50%;
     translate: -50% 0%;
     z-index: 20;
-    width: 80%;
+    width: 90%;
     height: auto;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: top;
+    flex-wrap: wrap;
     column-gap: 0.5rem;
 }
 #footer a {
@@ -333,7 +335,13 @@ button:disabled {
     font-size: 1rem;
     transition-delay: 0.8s;
 }
-#footer .white {
+#footer .white,
+#footer .white span {
     color: white;
     transition-delay: 0s;
+}
+
+#footer .white input[type="checkbox"] {
+    color: transparent;
+    background-color: white;
 }
