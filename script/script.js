@@ -1,7 +1,7 @@
 const SETUP = 0, GAME = 1;
 const RED_TEAM = 0, BLUE_TEAM = 1, TIE = -1;
 const MINUS = 0, ADD = 1, CANDY = 2;
-const SHORT_BEEP = 0, LONG_BEEP = 1, ENDGAME = 2;
+const SHORT_BEEP = 0, LONG_BEEP = 1, ENDGAME = 2, LOSE = 3;
 
 let timerTitle = null;
 let timerTime = null;
@@ -55,7 +55,7 @@ function init() {
         stageTimeLabel[BLUE_TEAM][i] = document.getElementById("blueStage" + num + "Time");
     }
     
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 4; i++) {
         audio[i] = document.getElementById("audio" + i);
         audio[i].load();
     }
@@ -436,6 +436,10 @@ function showOverlay(show, overlayTeam, endgame) {
             }
         }
         else {
+            const loseEnable = document.getElementById("loseEnable");
+            if (loseEnable.checked) {
+                audio[LOSE].play();
+            }
             overlay.style.height = "10rem";
             for (var team = RED_TEAM; team <= BLUE_TEAM; team++) {
                 colaImg[team].style.display = "none";
